@@ -45,7 +45,7 @@ var show_message = function(msg) {
 
   var p = document.createElement('p'); 
   p.id = 'dragonwebmsg';
-  p.innerHTML = msg;
+  p.innerText = msg;
   p.style.zIndex = 10000;
   p.style.position = 'fixed';
   p.style.color = '#423c3c';
@@ -95,17 +95,16 @@ document.addEventListener('dblclick', function(e) {
     if (document.body.style.cursor == 'grab'){
       document.body.style.cursor = "";
       remove_handlers();
-      show_message('<b>Page grabbing <u style="color: red;">turned off</u></b>.');
+      show_message('Page grabbing turned off.');
       window.getSelection().removeAllRanges();
       document.body.style.webkitUserSelect = 'toggle';
     } else {
       document.body.style.cursor = 'grab';
       listen_to_events()
-      show_message('<b>Page grabbing <u style="color: green;">turned on</u></b>.');
+      show_message('Page grabbing turned on.');
       window.getSelection().removeAllRanges()
       document.body.style.webkitUserSelect = 'none'
     }
   }
-
 
 });
