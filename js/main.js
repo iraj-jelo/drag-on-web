@@ -3,30 +3,37 @@
 
 document.body.style.webkitUserSelect = 'auto';
 var lastClientY, lastClientX, curDown;
+var grabbing = false;
+
+document.body.style.cursor = null;
+
+function log(msg){
+  console.log(msg);
+}
 
 var mouse_move = function(e){ 
-    if (curDown)  {
-      document.scrollingElement.scrollLeft = lastClientX - e.clientX;
-      document.scrollingElement.scrollTop += lastClientY - e.clientY;
-      lastClientX = e.clientX;
-      lastClientY = e.clientY;
-    }
+  if (curDown)  {
+    document.scrollingElement.scrollLeft += lastClientX - e.clientX;
+    document.scrollingElement.scrollTop += lastClientY - e.clientY;
+    lastClientX = e.clientX;
+    lastClientY = e.clientY;
+  }
 }
 
 var mouse_down = function(e){ 
-    lastClientY = e.clientY; 
-    lastClientX = e.clientX; 
-    curDown = true; 
-    e.preventDefault();
-    e.stopPropagation();
-    document.body.style.cursor = "grabbing";
+  lastClientY = e.clientY; 
+  lastClientX = e.clientX; 
+  curDown = true; 
+  e.preventDefault();
+  e.stopPropagation();
+  document.body.style.cursor = "grabbing";
 }
 
 var mouse_up = function(e){ 
-    if (curDown) {
-      curDown = false;
-      document.body.style.cursor = "grab";
-    } 
+  if (curDown) {
+    curDown = false;
+    document.body.style.cursor = "grab";
+  } 
 }
 
 var listen_to_events = function(){
@@ -41,18 +48,18 @@ var remove_handlers = function() {
   document.removeEventListener("mouseup", mouse_up);
 }
 
-var show_message = function(msg) {
+var show_message = function(element) {
 
   var p = document.createElement('p'); 
   p.id = 'dragonwebmsg';
-  p.innerText = msg;
+  p.appendChild(element);
   p.style.zIndex = 10000;
   p.style.position = 'fixed';
   p.style.color = '#423c3c';
   p.style.fontSize = '13px';
   p.style.left = '42%';
   p.style.padding = '5px';
-  p.style.fontWeight = 700;
+  p.style.fontWeight = '700';
   p.style.background = '#fbffac';
   p.style.border = '1px solid';
   p.style.borderColor = '#eaa926';
@@ -76,7 +83,7 @@ var show_message = function(msg) {
 
   setTimeout(function(){ 
     p.addEventListener('transitionend', function(e){
-        e.target.remove();
+        p.remove();
     }, false);
 
     p.style.top = '-10%';
@@ -86,25 +93,39 @@ var show_message = function(msg) {
 
 }
 
-document.addEventListener('dblclick', function(e) { 
+function createMessage(text1, text2, color){
+  var messageSpan = document.createElement('span');
+  var textNode = document.createTextNode(text1);
+  var textSpan = document.createElement('span');
+  textSpan.innerText = text2;
+  textSpan.style.color = color;
+  messageSpan.appendChild(textNode);
+  messageSpan.appendChild(textSpan);
+  return messageSpan
+}
 
-  if(e.shiftKey || e.metaKey || e.altKey || e.ctrlKey) {
-    // e.shiftKey: Shift-Click
-    // Alt+Click
-    // e.metaKey: Ctrl+Click on Windows & Command+Click on Mac.
-    if (document.body.style.cursor == 'grab'){
-      document.body.style.cursor = "";
-      remove_handlers();
-      show_message('Page grabbing turned off.');
-      window.getSelection().removeAllRanges();
-      document.body.style.webkitUserSelect = 'toggle';
-    } else {
-      document.body.style.cursor = 'grab';
-      listen_to_events()
-      show_message('Page grabbing turned on.');
-      window.getSelection().removeAllRanges()
-      document.body.style.webkitUserSelect = 'none'
-    }
-  }
+var enable = function() { 
+  document.body.style.cursor = 'grab';
+  listen_to_events();
+  show_message(createMessage('Page grabbing ', 'turned on.', 'green'));
+  window.getSelection().removeAllRanges();
+  document.body.style.webkitUserSelect = 'none';
+  grabbing = true;
+}
 
+var disable = function() {
+  document.body.style.cursor = "";
+  remove_handlers();
+  show_message(createMessage('Page grabbing ', 'turned off.', 'red'));
+  window.getSelection().removeAllRanges();
+  document.body.style.webkitUserSelect = 'toggle';
+  grabbing = false;
+}
+
+browser.runtime.onMessage.addListener(request => {
+  // if request.grabbing was true and grbbing was false, do grab
+  if (request.grabbing && !grabbing) enable();
+  // if request.grabbing was false and grbbing was true, dont grab 
+  if (!request.grabbing && grabbing) disable();
+  return Promise.resolve({response: "Hi from content script"});
 });
