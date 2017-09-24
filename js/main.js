@@ -120,6 +120,7 @@ var disable = function() {
   window.getSelection().removeAllRanges();
   document.body.style.webkitUserSelect = 'toggle';
   grabbing = false;
+  //browser.tabs.removeCSS({code: 'a {pointer-events: none;}'}); 
 }
 
 browser.runtime.onMessage.addListener(request => {
