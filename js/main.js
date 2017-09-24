@@ -4,6 +4,7 @@
 document.body.style.webkitUserSelect = 'auto';
 var lastClientY, lastClientX, curDown;
 var grabbing = false;
+var excluded_tags = ['TEXTAREA', 'INPUT'];
 
 document.body.style.cursor = null;
 
@@ -12,7 +13,7 @@ function log(msg){
 }
 
 var mouse_move = function(e){ 
-  if (curDown)  {
+  if (curDown) {
     document.scrollingElement.scrollLeft += lastClientX - e.clientX;
     document.scrollingElement.scrollTop += lastClientY - e.clientY;
     lastClientX = e.clientX;
@@ -35,6 +36,15 @@ var mouse_up = function(e){
     document.body.style.cursor = "grab";
   } 
 }
+
+// Just signal to toggle between text selection or grab mode on the web pages in background script.
+var dblclick = function(e) {
+  if (e.ctrlKey || e.altKey || e.shiftKey) {
+    browser.runtime.sendMessage({grabbing: grabbing});
+  }
+}
+
+document.addEventListener("dblclick", dblclick);
 
 var listen_to_events = function(){
   document.addEventListener('mousemove', mouse_move);
@@ -114,7 +124,7 @@ var enable = function() {
 }
 
 var disable = function() {
-  document.body.style.cursor = "";
+  document.body.style.cursor = "auto";
   remove_handlers();
   show_message(createMessage('Page grabbing ', 'turned off.', 'red'));
   window.getSelection().removeAllRanges();

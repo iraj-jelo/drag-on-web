@@ -29,7 +29,7 @@
   "background": {
     "scripts": ["background.js"]
   },
- 
+
   "permissions": ["activeTab", "tabs", "storage", "<all_urls>", "webRequest"],
 
   "browser_action": {
