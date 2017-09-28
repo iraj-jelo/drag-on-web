@@ -37,7 +37,6 @@ function sendMessageToTabsCallbak(tabs) {
 
 function sendMessageToTabs() {
   browser.tabs.query({
-    currentWindow: true,
     active: true
   }).then(sendMessageToTabsCallbak).catch(onError);
 }
@@ -54,8 +53,6 @@ function handleUpdated(tabId, changeInfo, tabInfo) {
 browser.tabs.onUpdated.addListener(handleUpdated);
 browser.tabs.onActivated.addListener(handleActivated);
 browser.browserAction.onClicked.addListener(toggle_grabbing);
-
-
 
 function handleMessage(request, sender, sendResponse) {
   if (request.grabbing == true|| request.grabbing == false) toggle_grabbing()
