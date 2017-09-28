@@ -6,7 +6,12 @@ var lastClientY, lastClientX, curDown;
 var grabbing = false;
 var excluded_tags = ['TEXTAREA', 'INPUT'];
 
-document.body.style.cursor = null;
+var cursor = document.body.style.cursor;
+
+if (cursor == "grab") {
+  document.body.style.cursor = "";
+  cursor = "";
+}
 
 function log(msg){
   console.log(msg);
@@ -114,7 +119,8 @@ function createMessage(text1, text2, color){
   return messageSpan
 }
 
-var enable = function() { 
+var enable = function() {
+  cursor = document.body.style.cursor; // last cursor before grabbing mode
   document.body.style.cursor = 'grab';
   listen_to_events();
   show_message(createMessage('Page grabbing ', 'turned on.', 'green'));
@@ -124,7 +130,7 @@ var enable = function() {
 }
 
 var disable = function() {
-  document.body.style.cursor = "auto";
+  document.body.style.cursor = cursor;
   remove_handlers();
   show_message(createMessage('Page grabbing ', 'turned off.', 'red'));
   window.getSelection().removeAllRanges();
