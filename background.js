@@ -1,3 +1,4 @@
+var key, links_status;
 var grabbing = true
 var css = 'a {pointer-events: none;};'
 var browser_action_on_icons = {16: "icons/grabbing-16.png", 32: "icons/grabbing-32.png"};
@@ -11,8 +12,28 @@ function onError(error) {
   console.error(`Error: ${error}`);
 }
 
+function restoreOptions() {
+
+  function setCurrentChoice(result) {
+    //mouse_button = (result.mouse_button == undefined)? "0" : result.mouse_button[1];
+    key = (result.key == undefined)? "<Ctrl>|<Alt>|<Shift>" : result.key[0];
+    links_status = (result.links == undefined)? "non-clikable" : result.links[0];
+  }
+
+  var getting = browser.storage.local.get(["key", "links"]);
+  getting.then(setCurrentChoice, onError);
+
+}
+
+restoreOptions();
+
 function toggle_grabbing() {
-  grabbing = (grabbing == true)? false: true
+  if (grabbing == true) {
+    grabbing = false;
+  } else {
+    grabbing = true;
+    restoreOptions();
+  }
   if (grabbing) {
     browser.browserAction.setIcon({path: browser_action_on_icons});
     browser.runtime.sendMessage({'status': 'enable'});
@@ -26,12 +47,12 @@ function toggle_grabbing() {
 
 function sendMessageToTabsCallbak(tabs) {
   for (let tab of tabs) {
-    if (grabbing) {
+    if (grabbing && (links_status == 'non-clickable')) {
       browser.tabs.insertCSS({code: css}) 
     } else {
       browser.tabs.removeCSS({code: css})
     }
-    browser.tabs.sendMessage(tab.id, {grabbing: grabbing}).then(response => {}).catch(onError);
+    browser.tabs.sendMessage(tab.id, {grabbing: grabbing, options: {key: key, links_status: links_status}}).then(response => {}).catch(onError);
   }
 }
 

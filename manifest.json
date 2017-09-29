@@ -30,6 +30,10 @@
     "scripts": ["background.js"]
   },
 
+  "options_ui": {
+    "page": "options/options.html"
+  },
+
   "permissions": ["activeTab", "tabs", "storage", "<all_urls>", "webRequest"],
 
   "browser_action": {

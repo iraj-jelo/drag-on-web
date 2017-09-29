@@ -1,8 +1,7 @@
-// Author: iraj jelodari
-// email: iraj.jelo@gmail.com
+/* Author: iraj jelodari <iraj.jelo@gmail.com> */
 
 document.body.style.webkitUserSelect = 'auto';
-var lastClientY, lastClientX, curDown;
+var lastClientY, lastClientX, curDown, options;
 var grabbing = false;
 var excluded_tags = ['TEXTAREA', 'INPUT'];
 
@@ -44,7 +43,19 @@ var mouse_up = function(e){
 
 // Just signal to toggle between text selection or grab mode on the web pages in background script.
 var dblclick = function(e) {
-  if (e.ctrlKey || e.altKey || e.shiftKey) {
+  if ((options.key == '<Ctrl>|<Alt>|<Shift>') && (e.ctrlKey || e.altKey || e.shiftKey)) {
+    browser.runtime.sendMessage({grabbing: grabbing});
+  }
+  if ((options.key == '<Ctrl>') && (e.ctrlKey)) {
+    browser.runtime.sendMessage({grabbing: grabbing});
+  }
+  if ((options.key == '<Alt>') && (e.altKey)) {
+    browser.runtime.sendMessage({grabbing: grabbing});
+  } 
+  if ((options.key == '<Shift>') && (e.shiftKey)) {
+    browser.runtime.sendMessage({grabbing: grabbing});
+  }
+  if ((options.key == 'None') && (!e.ctrlKey && !e.altKey && !e.shiftKey)) {
     browser.runtime.sendMessage({grabbing: grabbing});
   }
 }
@@ -64,7 +75,6 @@ var remove_handlers = function() {
 }
 
 var show_message = function(element) {
-
   var p = document.createElement('p'); 
   p.id = 'dragonwebmsg';
   p.appendChild(element);
@@ -144,5 +154,7 @@ browser.runtime.onMessage.addListener(request => {
   if (request.grabbing && !grabbing) enable();
   // if request.grabbing was false and grbbing was true, dont grab 
   if (!request.grabbing && grabbing) disable();
+
+  options = request.options;
   return Promise.resolve({response: "Hi from content script"});
 });
