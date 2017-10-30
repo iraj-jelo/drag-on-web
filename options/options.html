@@ -1,39 +1,45 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <meta charset="utf-8">
   </head>
-
   <body>
 
     <form style='padding: 15px;'>
         <h3>Behavior options:</h3> 
         <table style="width: 100%;">
           <tbody>
-<!--
-            <tr style="width: 100%;">
-              <td style='width:s 100%;'> <label style="color: auto">I use 
-
-                <select id="mouseButtonSelect" style="padding: .5rem .75rem;font-size: 1rem;line-height: 1.25; padding-box;border: 1px solid rgb(0, 51, 255);border-radius: .25rem;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; margin: 5px auto;"></select> mouse button to grab</label></td>
-
-            </tr>
--->
-
-
-            <tr style="width: 100%;">
-              <td style='width: 100%;'> <label style="color: auto">I use 
-
-                <select id="selectionKeySelect" style="padding: .5rem .75rem;font-size: 1rem;line-height: 1.25; padding-box;border: 1px solid rgb(0, 51, 255);border-radius: .25rem;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; margin: 5px auto;"></select> +<b> &lt;double-click&gt;</b> on webpage text to toggle between selection and grabbing modes</label></td>
-
+            <tr>
+              <td style='width: 50%;'> <label style="color: auto"> Notification</label></td>
+              <td><input id="notification" type="checkbox" style='padding:8px; width:8px; height:8px;'></td>
             </tr>
 
+            <tr>
+              <td style='width: 50%;'> <label style="color: auto">I use reverse mode (Scrollbar mode)</label></td>
+              <td><input id="reverse" type="checkbox" style='padding:8px; width:8px; height:8px;'></td>
+            </tr>
 
-            <tr style="width: 100%;">
-              <td style='width: 100%;'> <label style="color: auto">I prefer 
+            <tr>
+              <table style="width: 100%;">
+                <tbody>
 
-                <select id="linksSelect" style="padding: .5rem .75rem;font-size: 1rem;line-height: 1.25; padding-box;border: 1px solid rgb(0, 51, 255);border-radius: .25rem;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; margin: 5px auto;"></select> links during grab on the web page</label></td>
+                  <tr>
+                    <td style='width: 50%;'> <label style="color: auto">I prefer 
+                      <select id="clickSelect" style="padding: 1px;font-size: 1rem;line-height: 1.25; padding-box;border: auto;border-radius: .25rem;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; margin: 5px auto;background: auto;color: #000;word-spacing: 10px;font-style: italic;font-weight: bolder;"></select> click of mouse to grab on the page</label></td>
+                  </tr>
 
+                  <tr>
+                    <td> <label style="color: auto">I use 
+                      <select id="selectionKeySelect" style="padding: 1px;font-size: 1rem;line-height: 1.25; padding-box;border: auto;border-radius: .25rem;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; margin: 5px auto;background: auto;color: #000;word-spacing: 10px;font-style: italic;font-weight: bolder;"></select> +<b> &lt;double-click&gt;</b> on webpage text to toggle between selection and grabbing modes</label></td>
+                  </tr>
+
+                  <tr>
+                    <td style='width: 50%;'> <label style="color: auto">I prefer 
+                      <select id="linksSelect" style="padding: 1px;font-size: 1rem;line-height: 1.25; padding-box;border: auto;border-radius: .25rem;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; margin: 5px auto;background: auto;color: #000;word-spacing: 10px;font-style: italic;font-weight: bolder;"></select> links during grab on the web page</label></td>
+                  </tr>
+
+                </tbody>      
+              </table>              
             </tr>
 
           </tbody>      
@@ -42,10 +48,7 @@
         <button type="submit" style="float:right;background: #1b41c5;font-size: 18px;color: #fff;border: none;padding: 6px 12px 6px 12px; margin: 5px auto;">Save</button>
     </form>
 
-    
-
-<script src="options.js"></script>
+    <script src="options.js"></script>
 
   </body>
-
 </html>
