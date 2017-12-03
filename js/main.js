@@ -16,29 +16,65 @@ function log(msg){
   console.log(msg);
 }
 
+function detect_button(e){  
+  e = e || window.event;
+
+  if (e.which == null){
+    return (e.button < 2) ? 'left' : ((e.button == 4) ? 'middle' : 'right');
+  }
+  else{
+    return (e.which < 2) ? 'left' : ((e.which == 2) ? 'middle' : 'right');
+  }
+}
+
+function stopEvent(event){
+  if(event.preventDefault != undefined)
+    event.preventDefault();
+  if(event.stopPropagation != undefined)
+    event.stopPropagation();
+}
+
+var is_button_down = function(e) {
+  return detect_button(e).toUpperCase() == options.mouse_button.toUpperCase()
+}
+
 var mouse_move = function(e){ 
+  e = e || window.event;
   if (curDown) {
-    document.scrollingElement.scrollLeft += lastClientX - e.clientX;
-    document.scrollingElement.scrollTop += lastClientY - e.clientY;
+    if (options.reverse) {
+      document.scrollingElement.scrollLeft -= lastClientX - e.clientX;
+      document.scrollingElement.scrollTop -= lastClientY - e.clientY;
+    } else {
+      document.scrollingElement.scrollLeft += lastClientX - e.clientX;
+      document.scrollingElement.scrollTop += lastClientY - e.clientY;
+    }
     lastClientX = e.clientX;
     lastClientY = e.clientY;
   }
 }
 
 var mouse_down = function(e){ 
-  lastClientY = e.clientY; 
-  lastClientX = e.clientX; 
-  curDown = true; 
-  e.preventDefault();
-  e.stopPropagation();
-  document.body.style.cursor = "grabbing";
+  if (is_button_down(e)){
+    lastClientY = e.clientY; 
+    lastClientX = e.clientX; 
+    curDown = true; 
+    e.preventDefault(); // To disable things like cursor change during click and drag on input and textarea elements
+    e.stopPropagation();
+    document.body.style.cursor = "grabbing";
+  }
 }
 
 var mouse_up = function(e){ 
-  if (curDown) {
+  if (curDown && is_button_down(e)) {
     curDown = false;
     document.body.style.cursor = "grab";
+    e.preventDefault(); // To disable things like cursor change during click and drag on input and textarea elements
+    e.stopPropagation();
   } 
+}
+
+var disable_context_menu = function(e){
+  if (is_button_down(e)) stopEvent(e);
 }
 
 // Just signal to toggle between text selection or grab mode on the web pages in background script.
@@ -66,12 +102,14 @@ var listen_to_events = function(){
   document.addEventListener('mousemove', mouse_move);
   document.addEventListener('mousedown', mouse_down);
   document.addEventListener('mouseup', mouse_up);
+  document.addEventListener('contextmenu', disable_context_menu);
 }
 
 var remove_handlers = function() {
   document.removeEventListener("mousemove", mouse_move);
   document.removeEventListener("mousedown", mouse_down);
   document.removeEventListener("mouseup", mouse_up);
+  document.removeEventListener('contextmenu', disable_context_menu);
 }
 
 var show_message = function(element) {
@@ -133,7 +171,9 @@ var enable = function() {
   cursor = document.body.style.cursor; // last cursor before grabbing mode
   document.body.style.cursor = 'grab';
   listen_to_events();
-  show_message(createMessage('Page grabbing ', 'turned on.', 'green'));
+  if (options.notification) {
+    show_message(createMessage('Page grabbing ', 'turned on.', 'green'));
+  }
   window.getSelection().removeAllRanges();
   document.body.style.webkitUserSelect = 'none';
   grabbing = true;
@@ -142,19 +182,21 @@ var enable = function() {
 var disable = function() {
   document.body.style.cursor = cursor;
   remove_handlers();
-  show_message(createMessage('Page grabbing ', 'turned off.', 'red'));
+  if (options.notification) {
+    show_message(createMessage('Page grabbing ', 'turned off.', 'red'));
+  }
   window.getSelection().removeAllRanges();
   document.body.style.webkitUserSelect = 'toggle';
   grabbing = false;
-  //browser.tabs.removeCSS({code: 'a {pointer-events: none;}'}); 
 }
 
 browser.runtime.onMessage.addListener(request => {
+  options = request.options;
+
   // if request.grabbing was true and grbbing was false, do grab
   if (request.grabbing && !grabbing) enable();
   // if request.grabbing was false and grbbing was true, dont grab 
   if (!request.grabbing && grabbing) disable();
 
-  options = request.options;
   return Promise.resolve({response: "Hi from content script"});
 });
