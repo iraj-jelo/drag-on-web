@@ -2,7 +2,7 @@
 
   "manifest_version": 2,
   "name": "DragOnWeb",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "itaj jelodari <iraj.jelo@gmail.com>",
   "description": "Enables dragging scroll on the web pages. to enable or disable the feature just click on the grabbing button in the toolbar>. please see the github page to contribute",
   "homepage_url": "https://github.com/iraj-jelo/drag-on-web",
