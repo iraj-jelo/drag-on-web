@@ -4,9 +4,9 @@
     <meta charset="utf-8">
   </head>
   <body>
-
-    <form style='padding: 15px;'>
-        <h3>Behavior options:</h3> 
+    <form name="behavior_options" style='padding: 15px;'>
+        <fieldset>
+        <legend>Behavior options:</legend> 
         <table style="width: 100%;">
           <tbody>
             <tr>
@@ -15,7 +15,7 @@
             </tr>
 
             <tr>
-              <td style='width: 50%;'> <label style="color: auto">I use reverse mode (Scrollbar mode)</label></td>
+              <td style='width: 50%;'> <label style="color: auto">I use <b>reverse</b> mode (Scrollbar mode)</label></td>
               <td><input id="reverse" type="checkbox" style='padding:8px; width:8px; height:8px;'></td>
             </tr>
 
@@ -25,7 +25,7 @@
 
                   <tr>
                     <td style='width: 50%;'> <label style="color: auto">I prefer 
-                      <select id="clickSelect" style="padding: 1px;font-size: 1rem;line-height: 1.25; padding-box;border: auto;border-radius: .25rem;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; margin: 5px auto;background: auto;color: #000;word-spacing: 10px;font-style: italic;font-weight: bolder;"></select> click of mouse to grab on the page</label></td>
+                      <select id="clickSelect" style="padding: 1px;font-size: 1rem;line-height: 1.25; padding-box;border: auto;border-radius: .25rem;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; margin: 5px auto;color: #000;word-spacing: 10px;font-style: italic;font-weight: bolder;"></select> click of mouse to grab on the page</label></td>
                   </tr>
 
                   <tr>
@@ -38,14 +38,43 @@
                       <select id="linksSelect" style="padding: 1px;font-size: 1rem;line-height: 1.25; padding-box;border: auto;border-radius: .25rem;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; margin: 5px auto;background: auto;color: #000;word-spacing: 10px;font-style: italic;font-weight: bolder;"></select> links during grab on the web page</label></td>
                   </tr>
 
+                  <tr>
+                    <td style='width: 50%;'> <button type="submit" style="float:right;background: #1b41c5;font-size: 18px;color: #fff;border: none;padding: 6px 12px 6px 12px; margin: 5px auto;">Save</button></td>
+                  </tr>
+
                 </tbody>      
               </table>              
             </tr>
-
           </tbody>      
         </table>
-       
-        <button type="submit" style="float:right;background: #1b41c5;font-size: 18px;color: #fff;border: none;padding: 6px 12px 6px 12px; margin: 5px auto;">Save</button>
+       </fieldset>
+    </form>
+
+    <form name="cursor_icon" style='padding: 15px;'>
+        <fieldset>
+        <legend>Cursor icon:</legend> 
+        <table style="width: 100%;">
+          <tbody>
+                  <tr>
+                    <td style='width: 50%;'> <label style="color: auto">Open grabbing cursor 
+                      <input type="file" id="openGrabbingInput" style="padding: 1px;font-size: 1rem;line-height: 1.25; padding-box;border: auto;border-radius: .25rem;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; margin: 5px auto;background: auto;color: #000;word-spacing: 10px;font-style: italic;font-weight: bolder;" accept=".xls,.png,.svg,.ico"> </label></td>
+                  </tr>
+
+                  <tr>
+                    <td style='width: 50%;'> <label style="color: auto">Close grabbing cursor 
+                      <input type="file" id="closeGrabbingInput" style="padding: 1px;font-size: 1rem;line-height: 1.25; padding-box;border: auto;border-radius: .25rem;transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s; margin: 5px auto;background: auto;color: #000;word-spacing: 10px;font-style: italic;font-weight: bolder;" accept=".xls,.png,.svg,.ico"> </label> </td>
+                  </tr>
+
+                  <tr>
+                    <td style='width: 50%;'> <button type="submit" style="float:right;background: #1b41c5;font-size: 18px;color: #fff;border: none;padding: 6px 12px 6px 12px; margin: 5px auto;">Save</button></td>
+                  </tr>
+
+                </tbody>      
+              </table>              
+            </tr>
+          </tbody>      
+        </table>
+       </fieldset>
     </form>
 
     <script src="options.js"></script>

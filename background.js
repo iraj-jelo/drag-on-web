@@ -1,4 +1,4 @@
-var notification, reverse, mouse_button, key, links_status;
+var notification, reverse, mouse_button, key, links_status, open_grabbing_cursor, close_grabbing_cursor;
 var grabbing = true;
 var css = 'a {pointer-events: none;};';
 var browser_action_on_icons = {16: "icons/grabbing-16.png", 32: "icons/grabbing-32.png"};
@@ -13,18 +13,19 @@ function onError(error) {
 }
 
 function restoreOptions() {
-
   function setCurrentChoice(result) {
     notification = (result.notification == undefined)? false : result.notification;
     reverse = (result.reverse == undefined)? false : result.reverse;
     mouse_button = (result.mouse_button == undefined)? "Left" : result.mouse_button[0];
     key = (result.key == undefined)? "<Ctrl>|<Alt>|<Shift>" : result.key[0];
     links_status = (result.links == undefined)? "Non-clickable" : result.links[0];
+    open_grabbing_cursor = (result.open_grabbing_cursor == undefined)? "" : result.open_grabbing_cursor;
+    close_grabbing_cursor = (result.close_grabbing_cursor == undefined)? "" : result.close_grabbing_cursor;
   }
 
-  var getting = browser.storage.local.get(["notification", "reverse", "mouse_button", "key", "links"]);
+  var getting = browser.storage.local.get(["notification", "reverse", "mouse_button", "key", "links", 
+    "open_grabbing_cursor", "close_grabbing_cursor"]);
   getting.then(setCurrentChoice, onError);
-
 }
 
 restoreOptions();
@@ -52,7 +53,9 @@ function sendMessageToTabsCallbak(tabs) {
       reverse: reverse,
       mouse_button: mouse_button,
       key: key,
-      links_status: links_status
+      links_status: links_status,
+      open_grabbing_cursor: open_grabbing_cursor,
+      close_grabbing_cursor: close_grabbing_cursor
     }
     browser.tabs.sendMessage(tab.id, {grabbing: grabbing, options: opt}).then(response => {}).catch(onError);
   }
@@ -78,7 +81,7 @@ browser.tabs.onActivated.addListener(handleActivated);
 browser.browserAction.onClicked.addListener(toggle_grabbing);
 
 function handleMessage(request, sender, sendResponse) {
-  if (request.grabbing == true|| request.grabbing == false) toggle_grabbing()
+  if (request.grabbing == true || request.grabbing == false) toggle_grabbing()
 }
 
 browser.runtime.onMessage.addListener(handleMessage);

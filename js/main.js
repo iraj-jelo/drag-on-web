@@ -17,7 +17,7 @@ function log(msg){
 }
 
 function detect_button(e){  
-  e = e || window.event;
+   var e = e || window.event;
 
   if (e.which == null){
     return (e.button < 2) ? 'left' : ((e.button == 4) ? 'middle' : 'right');
@@ -60,14 +60,14 @@ var mouse_down = function(e){
     curDown = true; 
     e.preventDefault(); // To disable things like cursor change during click and drag on input and textarea elements
     e.stopPropagation();
-    document.body.style.cursor = "grabbing";
+    document.body.style.cursor = (options.close_grabbing_cursor != "")? `url("${options.close_grabbing_cursor}"), auto` : "grabbing";
   }
 }
 
 var mouse_up = function(e){ 
   if (curDown && is_button_down(e)) {
     curDown = false;
-    document.body.style.cursor = "grab";
+    document.body.style.cursor = (options.open_grabbing_cursor != "")? `url("${options.open_grabbing_cursor}"), auto` : "grab";
     e.preventDefault(); // To disable things like cursor change during click and drag on input and textarea elements
     e.stopPropagation();
   } 
@@ -169,7 +169,7 @@ function createMessage(text1, text2, color){
 
 var enable = function() {
   cursor = document.body.style.cursor; // last cursor before grabbing mode
-  document.body.style.cursor = 'grab';
+  document.body.style.cursor = (options.open_grabbing_cursor != "")? `url("${options.open_grabbing_cursor}"), auto` : "grab";
   listen_to_events();
   if (options.notification) {
     show_message(createMessage('Page grabbing ', 'turned on.', 'green'));
